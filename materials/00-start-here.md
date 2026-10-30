@@ -42,13 +42,15 @@ Both run on the home GPU, use real public data, and could produce a publishable 
 They're different kinds of work, and the right one is the one you'd want to think about
 on a Saturday.
 
-## How the machine works
+## The computers
 
-- The GPU computer has no screen. You reach it over SSH from your laptop.
-- `screen -S work` starts a session that keeps running if your connection drops.
-  `screen -r work` reattaches to it.
-- `research-jupyter` starts JupyterLab. To open it in your laptop's browser, run
-  `ssh -L 8888:localhost:8888 <machine>` on your laptop, then open the URL it prints.
-- 3D protein viewing happens on your laptop in [UCSF ChimeraX](https://www.cgl.ucsf.edu/chimerax/),
-  or inside Jupyter.
-- `nvidia-smi` shows what the GPU is doing.
+- **Your laptop** is where you work: reading, talking with Claude, your notebook and
+  decisions. Everything saves to GitHub, so nothing is lost and Dad can see what you need.
+- **The GPU computer (`builder3`)** is at home and does the heavy calculations. It has no
+  screen. Your laptop reaches it through a private family network (ZeroTier) once Dad
+  approves your laptop. `/connect-gpu` sets that up, and after that Claude runs GPU jobs
+  there for you.
+- **The software is Claude's job (and Dad's)**, not yours. If something needs building or
+  fixing, Claude handles it or asks Dad through a GitHub issue.
+- **3D proteins:** install [UCSF ChimeraX](https://www.cgl.ucsf.edu/chimerax/) on your
+  laptop, then type `open 1v4s` to see glucokinase.
