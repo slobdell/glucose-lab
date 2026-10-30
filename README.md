@@ -25,6 +25,7 @@ Datasets and papers for both: [`materials/sources.md`](materials/sources.md).
 
 | Path | What goes there |
 | --- | --- |
+| `DECISIONS.md` | Decision log: project choice, question, hypothesis, and why |
 | `materials/` | Background reading: the projects, sources, ground rules, how the machine works |
 | `notebook/` | The lab notebook: one entry per work session, written by the student |
 | `data/` | Downloaded datasets (not committed; `scripts/` re-downloads them) |
