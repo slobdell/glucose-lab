@@ -1,0 +1,25 @@
+# Downloaded datasets (re-fetched by scripts/)
+data/*
+!data/README.md
+
+# Job logs and model outputs
+logs/
+outputs/
+*.ckpt
+*.pt
+
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+build/
+dist/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Claude Code local settings
+.claude/settings.local.json
+
+# OS
+.DS_Store
