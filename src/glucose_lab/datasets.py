@@ -35,7 +35,36 @@ def load_shanghai_summary(kind="T1DM"):
     return pd.read_excel(DATA / "shanghai" / f"Shanghai_{kind}_Summary.xlsx")
 
 
+METABONET_DEFAULT_COLUMNS = ["source_file", "id", "date", "CGM", "insulin", "carbs", "is_test"]
+
+
+def load_metabonet(columns=METABONET_DEFAULT_COLUMNS, studies=None):
+    """MetaboNet public tier: one row per person per 5-minute step.
+
+    The whole file is 155M rows by 37 columns, too big for memory, so pick `columns`
+    (columns=None loads all) and optionally `studies` (values of `source_file`, e.g.
+    ["Loop", "OhioT1DM"]). Blank CGM readings stay blank.
+
+    `id` is only unique within a study, so a `person` column ("<study>:<id>") is added.
+    """
+    import pyarrow.parquet as pq
+
+    path = DATA / "metabonet" / "metabonet_public.parquet"
+    if not path.exists():
+        raise FileNotFoundError(f"{path} missing; run: python scripts/fetch_data.py metabonet")
+    if columns is not None:
+        columns = list(dict.fromkeys(["source_file", "id", *columns]))
+    filters = [("source_file", "in", list(studies))] if studies else None
+    df = pq.read_table(path, columns=columns, filters=filters,
+                       read_dictionary=["source_file", "id"]).to_pandas()
+    df.insert(0, "person", df["source_file"].astype(str) + ":" + df["id"].astype(str))
+    return df
+
+
 if __name__ == "__main__":
+    df = load_metabonet(["date", "CGM"], studies=["OhioT1DM", "ShanghaiT1DM"])
+    print(f"MetaboNet (2 small studies): {df['person'].nunique()} people, {len(df)} rows, "
+          f"{df['CGM'].isna().mean():.0%} blank CGM")
     for kind in ("T1DM", "T2DM"):
         df = load_shanghai(kind)
         cgm = df.filter(like="CGM").iloc[:, 0]

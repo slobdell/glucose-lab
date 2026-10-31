@@ -5,8 +5,9 @@ Usage:
     python scripts/fetch_data.py shanghai          # skips if already downloaded
     python scripts/fetch_data.py shanghai --force  # re-download
 
-Only open-access datasets belong in DATASETS. Restricted ones (DiaTrend, T1DEXI) are
-downloaded by hand after the data-use agreement is approved; see data/README.md.
+Datasets with a "manual" entry sit behind a website login: download them by hand as
+instructed, put the file in data/<name>/, then run this to verify it and write the
+manifest. Restricted (DUA) datasets aren't listed here at all; see data/README.md.
 """
 
 import argparse
@@ -31,6 +32,17 @@ DATASETS = {
         "license": "CC BY 4.0",
         "cite": "Zhao Q et al., Scientific Data 2023, https://pmc.ncbi.nlm.nih.gov/articles/PMC9849330/",
     },
+    "metabonet": {
+        "description": "MetaboNet public tier: 1,912 type 1 patients from 15 studies, CGM every 5 min",
+        "manual": "Sign in at https://metabo-net.org/, accept the Terms of Use, and download the "
+                  "Full Dataset (metabonet_public.parquet, not the train/test pair).",
+        "filename": "metabonet_public.parquet",
+        "md5": "70e953bb2b2b3e334d8f1abc32b63982",
+        "source": "https://metabo-net.org/",
+        "version": "public tier, file downloaded 2026-10-30",
+        "license": "Replica Health/JAEB public research terms (non-commercial); some sources CC BY 4.0, one CC BY-NC-SA 2.5 AR",
+        "cite": "Wolff MK et al., J Diabetes Sci Technol 2026, https://doi.org/10.1177/19322968261441637",
+    },
 }
 
 
@@ -52,10 +64,18 @@ def fetch(name, force=False):
 
     dest.mkdir(parents=True, exist_ok=True)
     archive = dest / spec["filename"]
-    print(f"{name}: downloading {spec['url']}")
-    urllib.request.urlretrieve(spec["url"], archive)
+    if "manual" in spec:
+        if not archive.exists():
+            sys.exit(f"{name}: needs a manual download. {spec['manual']} Save it as {archive}")
+        print(f"{name}: verifying {archive} (large files take a minute)")
+    else:
+        print(f"{name}: downloading {spec['url']}")
+        urllib.request.urlretrieve(spec["url"], archive)
     got = md5(archive)
     if got != spec["md5"]:
+        if "manual" in spec:
+            sys.exit(f"{name}: checksum mismatch (got {got}); a different version of the file? "
+                     f"Update DATASETS only after checking what changed")
         archive.unlink()
         sys.exit(f"{name}: checksum mismatch (got {got}, expected {spec['md5']}); the source may have changed")
 
@@ -82,7 +102,8 @@ if __name__ == "__main__":
     if args.list or not args.names:
         for k, v in DATASETS.items():
             status = "downloaded" if (DATA / k / "MANIFEST.json").exists() else "not downloaded"
-            print(f"{k:12s} {status:15s} {v['license']:10s} {v['description']}")
+            how = "manual" if "manual" in v else "auto"
+            print(f"{k:12s} {status:15s} {how:7s} {v['description']}")
         sys.exit(0)
     unknown = set(args.names) - DATASETS.keys()
     if unknown:

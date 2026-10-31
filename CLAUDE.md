@@ -70,9 +70,11 @@ Check at the start of each session.
   question, hypothesis, what counts as a result, datasets, scope changes. When she makes
   a decision like that, ask her to add a dated entry in her own words. Treat it as the
   current plan, and don't act against a recorded decision without raising it with her first.
-- **Data:** downloads go in `data/` (gitignored), fetched by a script in `scripts/` so they
-  can be re-downloaded anywhere. Record each dataset's source, version, date and license in
-  `data/README.md`. Read a dataset's terms before using it; some need a signed agreement.
+- **Data:** datasets exist only on `builder3` (`~/projects/glucose-lab/data/`); on her
+  laptop `data/` is empty, so run analysis on builder3 over SSH. `data/README.md` says
+  what's downloaded and what to watch for in each dataset. Downloads go in `data/`
+  (gitignored), fetched by a script in `scripts/` so they can be re-downloaded anywhere.
+  Record each dataset's source, version, date and license in `data/README.md`. Read a dataset's terms before using it; some need a signed agreement.
 - **This repo is public.** Never commit personal information about her or anyone else,
   credentials, or restricted-access data.
 
