@@ -7,4 +7,6 @@ dependencies:
   - pip:
       - simglucose==0.2.11  # UVA/Padova type 1 simulator (MIT)
       - xgboost==3.4.1      # gradient-boosted trees, GPU via device="cuda"
+      - openpyxl==3.1.5     # read .xlsx (Shanghai dataset)
+      - xlrd==2.0.2         # read .xls (Shanghai dataset)
       - -e .
