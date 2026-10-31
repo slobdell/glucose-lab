@@ -65,9 +65,12 @@ the SSH user is `devia`.
 Keep her working on the laptop and drive the server over SSH:
 
 - Push from the laptop, then `ssh builder3 'cd ~/projects/glucose-lab && git pull'`.
-- Start jobs in a named `screen` session on the server, logging to `logs/`. Use
-  `~/miniforge3/envs/research/bin/python` (or the project env once one exists), since
-  non-interactive SSH doesn't load conda.
+- Start jobs with `scripts/run-job.sh <job-name> <command...>`, which runs them in a named
+  `screen` session using the research env and prints the log path under `logs/`. It
+  handles the fact that non-interactive SSH doesn't load conda.
+- Forecasting experiments: `scripts/run_forecast.py` (flags for every scientific choice;
+  results land in `outputs/<name>/`, which is gitignored). Her choices go in the flags;
+  don't pick them for her.
 - Copy back only the small results she needs (tables, figures) with `scp`. Large data
   stays on the server.
 - For JupyterLab: start it with `ssh builder3 '~/.local/bin/research-jupyter'`. Then she

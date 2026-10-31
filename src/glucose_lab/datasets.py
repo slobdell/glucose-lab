@@ -57,7 +57,10 @@ def load_metabonet(columns=METABONET_DEFAULT_COLUMNS, studies=None):
     filters = [("source_file", "in", list(studies))] if studies else None
     df = pq.read_table(path, columns=columns, filters=filters,
                        read_dictionary=["source_file", "id"]).to_pandas()
-    df.insert(0, "person", df["source_file"].astype(str) + ":" + df["id"].astype(str))
+    codes = df.groupby(["source_file", "id"], observed=True, sort=False).ngroup()
+    keys = df[["source_file", "id"]].drop_duplicates()  # same first-seen order as ngroup
+    names = (keys["source_file"].astype(str) + ":" + keys["id"].astype(str)).to_numpy()
+    df.insert(0, "person", pd.Categorical.from_codes(codes.to_numpy(), names))
     return df
 
 
