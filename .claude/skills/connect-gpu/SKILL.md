@@ -53,8 +53,12 @@ the SSH user is `devia`.
    key for builder3" --body "<contents of ~/.ssh/id_ed25519.pub>"`. Tell her it's waiting on
    her dad. Stop here.
 
-6. **GPU check.** Run `ssh builder3 'nvidia-smi --query-gpu=name,memory.total --format=csv,noheader'`
-   and tell her the GPU is ready.
+6. **GPU check.** Run `ssh builder3 'cd ~/projects/glucose-lab && git pull -q && scripts/run-smoke-test.sh'`.
+   It prints a log path; wait about 30 seconds, then `ssh builder3 'tail -12 ~/projects/glucose-lab/<log>'`
+   until it ends in `SMOKE TEST PASSED` or `FAILED`. It simulates a virtual patient and trains
+   tiny models on the GPU, so a pass means the whole Project B stack works. Tell her the GPU
+   is ready. Its error numbers are on synthetic data, not results; don't present them as
+   findings. On a failure you can't fix quickly, open a `tooling` issue with the log.
 
 ## Running GPU work once connected
 

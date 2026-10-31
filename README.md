@@ -74,6 +74,8 @@ the shared `research` conda env (PyTorch + JupyterLab):
 conda activate research
 pip install -e .          # makes `import glucose_lab` work
 research-gpu-check        # confirms the GPU works
+mamba env update -n research -f environment.yml  # Project B packages
+scripts/run-smoke-test.sh # end-to-end check: simulator + LSTM + XGBoost on GPU
 research-jupyter          # starts JupyterLab in a screen session
 ```
 

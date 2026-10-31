@@ -1,0 +1,10 @@
+# Project B packages, added on top of the shared `research` env (which already has
+# PyTorch, JupyterLab, numpy, pandas, scikit-learn, matplotlib). Apply on builder3 with:
+#   mamba env update -n research -f environment.yml
+name: research
+dependencies:
+  - pip
+  - pip:
+      - simglucose==0.2.11  # UVA/Padova type 1 simulator (MIT)
+      - xgboost==3.4.1      # gradient-boosted trees, GPU via device="cuda"
+      - -e .
