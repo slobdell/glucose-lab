@@ -73,5 +73,11 @@ Keep her working on the laptop and drive the server over SSH:
   don't pick them for her.
 - Copy back only the small results she needs (tables, figures) with `scp`. Large data
   stays on the server.
+- Figures: `scripts/plot_results.py --run <name>` renders PNGs on builder3 into
+  `outputs/<name>/figures/` (a day of one person's glucose with each model's forecast,
+  Clarke error grids, a score by hour of day; `--help` for options). Copy them to the same
+  path in her laptop clone (`outputs/` is gitignored there too), look at them yourself
+  with Read, and `open` them for her. Describe what a figure shows, not what it means;
+  interpreting it is her job.
 - For JupyterLab: start it with `ssh builder3 '~/.local/bin/research-jupyter'`. Then she
   runs `ssh -N -L 8888:localhost:8888 builder3` in Terminal and opens the printed URL.
